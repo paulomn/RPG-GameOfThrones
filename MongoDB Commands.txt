@@ -1,0 +1,88 @@
+
+//////////Server Configuration//////////
+//Configure server and start the process
+"C:\Program Files\MongoDB\Server\3.4\bin\mongod.exe" --dbpath "E:\MongoDBData"
+//Management Console
+"C:\Program Files\MongoDB\Server\3.4\bin\mongod.exe" --dbpath "E:\MongoDBData" --rest
+//Call the client
+"C:\Program Files\MongoDB\Server\3.4\bin\mongo.exe"
+//////////Server Configuration//////////
+
+//////////Database Operations//////////
+//Shows all databases
+show dbs
+//Create or change current database (will create on the first collection)
+use RPG-GameOfThrones
+//Insert a new document
+db.characters.save({Name: "Jon Snow"})
+//Remove database
+use RPG-GameOfThrones
+db.dropDatabase()
+//////////Database Operations//////////
+
+//////////Collections Operations//////////
+//Create collection (like table)
+db.createCollection("characters")
+//Get all collections
+db.getCollectionNames()
+//Delete a collection
+db.characters.drop()
+//////////Collections Operations//////////
+
+//////////Comparison Operators//////////
+//Create a new document inside a collection
+db.characters.save({Name: "John Snow", Age: "30", Gender: "M", SIN: "7534874"})
+//Create a document 1:N
+> db.characters.save({ Name: "Gregor Cleagane", Age: "36", Gender: "M", SIN: "3456", Places: [{ Name: "Norway"} ,{Name: "Sweden"}] })
+//Query any document
+db.characters.findOne()
+//Query all documents inside a collection
+db.characters.find()
+//Query all documents inside a collection, organizing the results on the screen
+db.characters.find().pretty()
+//Query with criteria (equal)
+db.characters.find({Name: {$eq: "Gregor Cleagane"}}).pretty()
+//Query with criteria (less than)
+db.characters.find({Age: {$lt: "30"}}).pretty()
+//Query with criteria (less than or equal)
+db.characters.find({Age: {$lte: "30"}}).pretty()
+//Query with criteria (greater than)
+db.characters.find({Age: {$gt: "30"}}).pretty()
+//Query with criteria (greater than or equal)
+db.characters.find({Age: {$gte: "30"}}).pretty()
+//Query with criteria (not equal)
+db.characters.find({Gender: {$ne: "F"}}).pretty()
+//////////Comparison Operators//////////
+
+//////////Logical Operators//////////
+//Query with 'and' (equal)
+db.characters.find({Gender: {$eq: "F"}, Age: {$gt: "26"}})
+//Query with 'or' (equal)
+db.characters.find({$or: [{Gender: {$eq: "F"}}, {Age: {$gt: "30"}}]})
+//////////Logical Operators//////////
+
+//////////Documents Update//////////
+//General Syntax to Update(default multi = false: update only the first document)
+update({criterias}, {$set}, {multi: false|true})
+//Update a document
+> db.characters.update({Name: "Daenerys Targaryen"}, {$set: {Name: "Daenerys J.Targaryen"}}, {multi: true})
+//Update more than one field
+> db.characters.update({Name: "Daenerys Targaryen"}, {$set: {Name: "Daenerys J.Targaryen", Age: "27"}}, {multi: true})
+//Save (replaces the document with the _id=XXXXXXXXX. If don't find, create)
+//////////Documents Update//////////
+
+//////////Documents Deletion//////////
+//General Syntax to Remove(default false)
+remove({criterias}, {false|true})
+//Remove a document (without $eq)
+db.characters.remove({Age: "30"})
+//Remove a document (with $eq)
+db.characters.remove({Age: {$eq: "30"})
+//Remove with logical operators
+db.characters.remove({Age: {$gt: "30"})
+//////////Documents Deletion//////////
+
+//////////Map MongoDB as PATH//////////
+1- Control Panel -> System -> Advanced System Setting -> Advanced -> Environment Variables
+2- Add to PATH C:\Program Files\MongoDB\Server\3.4\bin
+//////////Map MongoDB as PATH//////////
