@@ -22,7 +22,12 @@ module.exports.saveRegister = function(application, req, res){
 
 	var connection = application.config.dbConnection;
 	var usersDAO = new application.app.models.users(connection);
+	var gamesDAO = new application.app.models.games(connection);
+
 	usersDAO.createUser(dataForm);
+	gamesDAO.generateParams(dataForm.userName);
+
+	//Game params generations
 
 	res.send('OK');
 }

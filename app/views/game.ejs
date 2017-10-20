@@ -14,6 +14,63 @@
 		<!-- incluindo css -->
 		<link href="css/style.css" rel="stylesheet">
 
+		<script>
+			
+			$(document).ready(function(){
+
+				$('#signOut').click(function(){
+					window.location.href = '/signOut';
+				});
+
+				$('#btn_vassal').click(function(){
+					
+					$('#msg').hide();
+
+					$.ajax({
+						url: '/vassal',
+						method: 'get',
+						success: function(data){
+							$('#actions').html(data);
+						}
+					});
+				});
+
+				$('#btn_scrolls').click(function(){
+					$.ajax({
+						url: '/scrolls',
+						method: 'get',
+						success: function(data){
+							$('#actions').html(data);	
+							clearTimeout(timerId);
+							timer();
+						}
+					});
+
+				});
+			});
+
+
+			var timerId = null;
+
+			function timer(){
+
+				$('.remaining').each(function(){
+					var segs = $(this).html();
+					var currentSegs = parseInt(segs) - 1;
+
+					if (currentSegs < 0){
+						window.location.href = '/game?success=F';
+					} else {
+						$(this).html(currentSegs);
+					}
+
+				});
+
+				timerId = setTimeout('timer()', 1000);
+			}
+
+		</script>	
+
 	</head>
 
 	<body class="body-jogo">
@@ -21,38 +78,62 @@
 		<nav class="navbar navbar-default navbar-static-top">
 			<div class="container">
 				<div class="form-group sair">
-					<button type="button" class="btn btn-info pull-right">Sair</button>
+					<button type="button" class="btn btn-info pull-right" id="signOut" name="signOut">Sign Out</button>
 				</div>
 			</div>
 		</nav>
 
 	    <div class="container">
-	    	
+	    	<% if(success == 'N') {%>
+	    	<div class="alert alert-danger" id="msg">
+	    		<strong>Invalid operation. Please, check your command.</strong>
+	    	</div>
+			<% } %>
+
+			<% if(success == 'S') {%>
+	    	<div class="alert alert-info" id="msg">
+	    		<strong>Operation has been successfully completed.</strong>
+	    	</div>
+			<% } %>
+
+			<% if(success == 'F') {%>
+	    	<div class="alert alert-info" id="msg">
+	    		<strong>An action has just been concluded!</strong>
+	    	</div>
+			<% } %>
+
+			<% if(success == 'R') {%>
+	    	<div class="alert alert-info" id="msg">
+	    		<strong>Your action has been revoked!</strong>
+	    	</div>
+			<% } %>
+
+
 			<div class="row">
 	    		<div class="col-sm-3 casa">
-					<img src="images/casa_martell.jpg" />
+					<img src="images/House <%= house%>.jpg" />
 				</div>
 
 	    		<div class="col-sm-9">
 					<div class="row barra-superior">
 						<div class="col-sm-2"> 
-							<img src="images/habilidades/temor.jpg" title="Temor" alt="Temor" />
-							<span>754</span>
+							<img src="images/habilidades/fear.jpg" title="Fear" alt="Fear" />
+							<span><%= game.fear %></span>
 						</div>
 						
 						<div class="col-sm-2"> 
-							<img src="images/habilidades/sabedoria.jpg" title="Sabedoria" alt="Sabedoria"/>
-							<span>754</span>
+							<img src="images/habilidades/wisdom.jpg" title="Wisdom" alt="Wisdom"/>
+							<span><%= game.wisdom %></span>
 						</div>
 						
 						<div class="col-sm-2"> 
-							<img src="images/habilidades/comercio.jpg" title="Comércio" alt="Comércio"/>
-							<span>754</span>
+							<img src="images/habilidades/trade.jpg" title="Trade" alt="Trade"/>
+							<span><%= game.trade %></span>
 						</div>
 						
 						<div class="col-sm-2"> 
-							<img src="images/habilidades/magia.jpg" title="Magia" alt="Magia"/>
-							<span>754</span>
+							<img src="images/habilidades/magic.jpg" title="Magic" alt="Magic"/>
+							<span><%= game.magic %></span>
 						</div>
 					</div>
 				</div>
@@ -61,7 +142,7 @@
 			<div class="row">
 				<div class="col-sm-3"></div>
 				<div class="col-sm-9">
-					<div class="acoes"></div>					
+					<div class="acoes" id="actions"></div>					
 				</div>
 			</div>
 			
@@ -72,18 +153,19 @@
 			
 				<div class="row">
 					<div class="col-sm-1">
-						<img src="images/outros/suditos.jpg" title="Aldeões" alt="Aldeões"/>
+						<img src="images/outros/vassal.jpg" title="Vassal" alt="Vassal" id="btn_vassal"/>
+						<span><%= game.vassal %></span>
 					</div>
 					
 					<div class="col-sm-1">
-						<img src="images/outros/pergaminho.jpg" title="Pergaminhos" alt="Pergaminhos"/>
+						<img src="images/outros/scroll.jpg" title="Scroll" alt="Scroll" id="btn_scrolls"/>
 					</div>
 					
 					<div class="col-sm-8"></div>
 					
 					<div class="col-sm-2">
-						<img src="images/outros/moeda.jpg" title="Moeda" alt="Moeda"/>
-						<span>25</span>
+						<img src="images/outros/coin.jpg" title="Coin" alt="Coin"/>
+						<span><%= game.coin %></span>
 					</div>
 					
 				</div>

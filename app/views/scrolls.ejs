@@ -1,0 +1,29 @@
+<div id="pergaminhos">					
+	<h3>Scrolls</h3>
+	
+	<ul>
+		<% for (var i=0; i < dataForm.length; i++) { %>
+		
+		<%
+			var textVassal = '';
+
+			switch(parseInt(dataForm[i].actions)){
+				case 1: textVassal = 'vassal(s) gathering resources'; break;
+				case 2: textVassal = 'scheduled hanging(s)'; break;
+				case 3: textVassal = 'vassal(s) receiving History training'; break;
+				case 4: textVassal = 'vassal(s) receiving Magic training'; break;
+			}
+
+			var date = new Date();
+			var today = date.getTime();
+			var remainingTime = Math.round((dataForm[i].expiresIn - today) / 1000);
+		%>
+		
+		<li>
+			<%= dataForm[i].amount%> <%=textVassal%>
+			- <small>restam <span class="remaining"><%=remainingTime%></span> segundos
+			- <a href="/revokeVassal?id=<%= dataForm[i]._id %>">revogar ordem</a></small>
+		</li>
+		<% } %>
+	</ul>
+</div>
